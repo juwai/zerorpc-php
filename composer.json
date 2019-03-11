@@ -18,4 +18,5 @@
   "autoload": {
     "classmap": ["src/"]
   },
+  "minimum-stability": "stable"
 }
