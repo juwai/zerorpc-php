@@ -49,10 +49,12 @@ class ConfigMiddleware
 
     public function resolveEndpoint()
     {
-        return function ($name, $version) {
-            $configName = $this->getConfigName($name);
-            $version = $this->getVersion($name, $version);
-            $config = $this->config[$configName][$version];
+        $class = $this;
+
+        return function ($name, $version) use ($class) {
+            $configName = $class->getConfigName($name);
+            $version = $class->getVersion($name, $version);
+            $config = $class->config[$configName][$version];
             if (is_array($config)) {
                 $endpoint = $config[array_rand($config)];
             } else {
@@ -64,9 +66,11 @@ class ConfigMiddleware
 
     public function beforeSendRequest()
     {
-        return function ($event, $client) {
-            $event->header['access_key'] = $this->getAccessKey($client->_endpoint);
-            $event->header['service_version'] = $this->getVersion($client->_endpoint,
+        $class = $this;
+
+        return function ($event, $client) use ($class) {
+            $event->header['access_key'] = $class->getAccessKey($client->_endpoint);
+            $event->header['service_version'] = $class->getVersion($client->_endpoint,
                                                                   $client->_version);
             $event->header['service_name'] = $client->_endpoint;
         };
