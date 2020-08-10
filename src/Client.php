@@ -71,11 +71,6 @@ class Client
 
     public function __call($name, $args)
     {
-        $connectedEndpoints = $this->socket->getEndpoints();
-        if (empty($connectedEndpoints['connect'])) {
-            $this->connect();
-        }
-
         $response  = $this->sync($name, $args);
         return $response;   
     }
@@ -99,6 +94,11 @@ class Client
 
     public function sync($name, array $args, $timeout = 0)
     {
+        $connectedEndpoints = $this->socket->getEndpoints();
+        if (empty($connectedEndpoints['connect'])) {
+            $this->connect();
+        }
+
         if (!$timeout) {
             $timeout = $this->timeout;
         }
