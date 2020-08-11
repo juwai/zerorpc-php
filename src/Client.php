@@ -132,6 +132,11 @@ class Client
         $this->context->hookAfterResponse($event, $this);
     }
 
+    public function dispatch($timeout = null)
+    {
+        $timeout = $timeout ?: $this->timeout;
+        Channel::dispatch($timeout);
+    }
 }
 
 
